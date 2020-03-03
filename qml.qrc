@@ -26,5 +26,6 @@
         <file>Main.qml</file>
         <file>Home.qml</file>
         <file>MenuPage.qml</file>
+        <file>Lovelace.qml</file>
     </qresource>
 </RCC>

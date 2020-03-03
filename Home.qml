@@ -3,12 +3,15 @@ import QtQuick.Controls 2.3
 import "./ui" as UI
 
 Item {
-//    anchors.fill: parent
-
-
     Component {
         id: menu
         MenuPage {
+        }
+    }
+
+    Component {
+        id: lovelace
+        Lovelace {
         }
     }
 
@@ -63,6 +66,18 @@ Item {
         text: qsTr("Quit")
         onClicked: function(){
             Qt.quit()
+        }
+    }
+
+    UI.ZButton {
+        id: button
+        anchors.left: parent.left
+        anchors.leftMargin: 50
+        anchors.bottom: menuButtom.top
+        anchors.bottomMargin: 50
+        text: qsTr("房间")
+        onClicked: {
+            stackView.push(lovelace)
         }
     }
 
