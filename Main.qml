@@ -114,7 +114,9 @@ Window {
                     socket.sendTextMessage(lovelaceReq.body)
                     break
                 case "event":
-                    const i = states.findIndex(item=>(item.entity_id === receiveObj.event.data.entity_id))
+                    const i = states.findIndex(function(item){
+                        return item.entity_id === receiveObj.event.data.entity_id
+                    })
                     states[i] = receiveObj.event.data.new_state
                     stateSignal(receiveObj.event.data.entity_id)
                     break

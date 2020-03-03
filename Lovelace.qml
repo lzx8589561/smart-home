@@ -18,7 +18,9 @@ Item {
             gridView.darw()
         }
         Component.onCompleted: {
-            zmodel = main.lovelaceArray.map(item => ({"name": item.title}))
+            zmodel = main.lovelaceArray.map(function(item){
+                return {"name": item.title}
+            })
         }
     }
 
@@ -48,9 +50,9 @@ Item {
         }
 
         function darw(){
-            let cards = []
+            var cards = []
             const item = main.lovelaceArray[topMenu.currentIndex]
-            item.cards.forEach(card => {
+            item.cards.forEach(function(card) {
                 switch(card.type){
                     case "entities":
                         cards.push(card)
@@ -60,11 +62,11 @@ Item {
 
             lovelaceCards = cards
             model.clear()
-            lovelaceCards.forEach(item => model.append(item))
+            lovelaceCards.forEach( function(item){model.append(item)})
         }
 
         function findEntity(id){
-            return main.states.find(item=>(item.entity_id === id))
+            return main.states.find(function(item){return item.entity_id === id})
         }
 
         delegate: Item {
