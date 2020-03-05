@@ -3,6 +3,7 @@ import QtQuick.Controls 2.3
 import "./ui" as UI
 
 Item {
+    property string title: "菜单"
     Text {
         id: text1
         x: 163

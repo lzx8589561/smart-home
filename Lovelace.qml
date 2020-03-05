@@ -4,7 +4,7 @@ import QtGraphicalEffects 1.0
 import "./ui" as UI
 
 Item {
-
+    property string title: "控制主页"
     property var lovelaceCards: value
 
     UI.ZTopMenu {

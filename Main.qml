@@ -23,11 +23,9 @@ Window {
 
     UI.ZLoading {
         id: loading
-//        parent: main
         z:9998
         ztitleText: qsTr("loading...")
     }
-
 
 
     UI.ZSnackbar {
@@ -46,36 +44,62 @@ Window {
         UI.ZText {
             id: backButton
             visible: stackView.depth > 1
-            anchors.top: parent.top
-            anchors.topMargin: 8
+            anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 10
-            width: 80
-            height: 35
             text: UI.ZFontIcon.fa_angle_left
             font.family: UI.ZFontIcon.fontFontAwesome.name
             color: "white"
             font.pixelSize: 35
+        }
 
-            MouseArea {
-                anchors.fill: parent
-                onPressed: {
-                    backButton.color = "#cecece"
-                }
-                onReleased: {
-                    backButton.color = "white"
-                }
-                onClicked: {
-                    stackView.pop()
-                }
+        UI.ZText {
+            id: backLabel
+            visible: stackView.depth > 1
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: backButton.right
+            anchors.leftMargin: 10
+            text: stackView.depth > 1 ? stackView.get(stackView.index - 1).title : ""
+            color: "white"
+            font.pixelSize: 20
+        }
+
+        MouseArea {
+            anchors {
+                top: parent.top
+                left: backButton.left
+                right: backLabel.right
+                bottom: parent.bottom
+            }
+
+            onPressed: {
+                backButton.color = "#cecece"
+                backLabel.color = "#cecece"
+            }
+
+            onReleased: {
+                backButton.color = "white"
+                backLabel.color = "white"
+            }
+
+            onClicked: {
+                stackView.pop()
             }
         }
 
-        FPSLabel {
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: 100
-            height: 50
+        UI.ZText {
+            id: titleLabel
+            anchors.centerIn: parent
+            text: stackView.currentItem.title
+            color: "white"
+            font.pixelSize: 20
         }
+
+//        FPSLabel {
+//            anchors.horizontalCenter: parent.horizontalCenter
+//            width: 100
+//            height: 50
+//        }
 
         UI.ZText{
             text: UI.ZFontIcon.fa_signal
@@ -106,9 +130,15 @@ Window {
         "id": 15,
         "body": "{\"id\":15,\"type\":\"lovelace/config\",\"force\":false}"
     }
+    property var subscribeLovelaceReq: {
+        "id": 20,
+        "body": "{\"id\": 20,\"type\": \"subscribe_events\",\"event_type\": \"lovelace_updated\"}"
+    }
     property var states: null
     property var lovelaceArray: null
-    property int reqIndex: 20
+    property int reqIndex: 30
+
+    property int reLovelaceReqIndex: 0
 
     WebSocket {
         id: socket
@@ -121,13 +151,23 @@ Window {
                     socket.sendTextMessage(subscribeReq.body)
                     socket.sendTextMessage(getStatesReq.body)
                     socket.sendTextMessage(lovelaceReq.body)
+                    socket.sendTextMessage(subscribeLovelaceReq.body)
                     break
                 case "event":
-                    const i = states.findIndex(function(item){
-                        return item.entity_id === receiveObj.event.data.entity_id
-                    })
-                    states[i] = receiveObj.event.data.new_state
-                    stateSignal(receiveObj.event.data.entity_id)
+                    switch(receiveObj.id){
+                        case subscribeReq.id:
+                            const i = states.findIndex(function(item){
+                                return item.entity_id === receiveObj.event.data.entity_id
+                            })
+                            states[i] = receiveObj.event.data.new_state
+                            stateSignal(receiveObj.event.data.entity_id)
+                            break
+                        case subscribeLovelaceReq.id:
+                            reqIndex ++
+                            reLovelaceReqIndex = reqIndex
+                            socket.sendTextMessage("{\"id\":"+reLovelaceReqIndex+",\"type\":\"lovelace/config\",\"force\":false}")
+                            break
+                    }
                     break
                 case "result":
                     switch(receiveObj.id){
@@ -136,6 +176,13 @@ Window {
                                 console.log("订阅成功")
                             }else{
                                 console.log("订阅失败")
+                            }
+                            break
+                        case subscribeLovelaceReq.id:
+                            if(receiveObj.success){
+                                console.log("订阅布局成功")
+                            }else{
+                                console.log("订阅布局失败")
                             }
                             break
                         case getStatesReq.id:
@@ -154,6 +201,15 @@ Window {
                                 console.log(JSON.stringify(lovelaceArray))
                             }else{
                                 console.log("获取布局失败")
+                            }
+                            break
+                        case reLovelaceReqIndex:
+                            if(receiveObj.success){
+                                console.log("重获取布局成功")
+                                lovelaceArray = receiveObj.result.views
+                                console.log(JSON.stringify(lovelaceArray))
+                            }else{
+                                console.log("重获取布局失败")
                             }
                             break
                         default:

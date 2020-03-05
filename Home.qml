@@ -3,6 +3,7 @@ import QtQuick.Controls 2.3
 import "./ui" as UI
 
 Item {
+    property string title: "主页"
     Component {
         id: menu
         MenuPage {
