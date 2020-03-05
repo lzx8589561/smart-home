@@ -48,7 +48,7 @@ Button {
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
         font.bold: false
-        font.pixelSize: 18
+        font.pixelSize: 20
         Behavior on color { ColorAnimation {duration: 100} }
     }
 

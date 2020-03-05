@@ -21,6 +21,15 @@ Window {
         }
     }
 
+    UI.ZLoading {
+        id: loading
+//        parent: main
+        z:9998
+        ztitleText: qsTr("loading...")
+    }
+
+
+
     UI.ZSnackbar {
         id: snackbar
         z:9999
@@ -158,12 +167,31 @@ Window {
             if (socket.status == WebSocket.Error) {
                 console.log("Error: " + socket.errorString)
             } else if (socket.status == WebSocket.Open) {
+                socketCheckTimer.running = false
+                console.log("Socket connection success")
+                loading.zclose()
                 socket.sendTextMessage(authReq.body)
             } else if (socket.status == WebSocket.Closed) {
-                console.log("Socket closed");
+                socketCheckTimer.running = true
+                console.log("Socket closed")
             }
         }
         active: true
+        Component.onCompleted: {
+            loading.zopen()
+        }
+    }
+
+    Timer {
+        id: socketCheckTimer
+        interval: 2000; running: true; repeat: true
+        onTriggered: {
+            if(socket.status != WebSocket.Open && socket.status != WebSocket.Connecting){
+                console.log("reconnect")
+                socket.active = false
+                socket.active = true
+            }
+        }
     }
 
     StackView {

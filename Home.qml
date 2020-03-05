@@ -75,7 +75,7 @@ Item {
         anchors.leftMargin: 50
         anchors.bottom: menuButtom.top
         anchors.bottomMargin: 50
-        text: qsTr("房间")
+        text: qsTr("Home")
         onClicked: {
             stackView.push(lovelace)
         }
