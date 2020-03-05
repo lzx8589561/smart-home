@@ -43,11 +43,12 @@ Button {
         style: "body"
         text: control.text
         opacity: enabled ? 1.0 : 0.3
-        color: parent.hovered ? zbgColor : zfontColor
+        color: parent.pressed ? zbgColor : zfontColor
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
         font.bold: false
+        font.pixelSize: 18
         Behavior on color { ColorAnimation {duration: 100} }
     }
 
@@ -56,7 +57,7 @@ Button {
         implicitWidth: ZTheme.buttonWidth
         implicitHeight: ZTheme.buttonHeight
         opacity: enabled ? 1 : 0.3
-        color: parent.hovered ? (parent.pressed ? Qt.darker(zfontColor, 1.1) : zfontColor) : zbgColor
+        color: parent.pressed ? Qt.darker(zfontColor, 1.1) : zbgColor
         border.color: zborderColor
         border.width: 1
         radius: ZTheme.radius

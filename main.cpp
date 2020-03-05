@@ -1,5 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QApplication>
 #include "fpslabel.h"
 
 int main(int argc, char *argv[])
@@ -14,6 +15,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<FPSLabel>("FPS", 1, 0, "FPSLabel");
 
     QQmlApplicationEngine engine;
+    QApplication::setOverrideCursor(Qt::BlankCursor);
     engine.load(QUrl(QStringLiteral("qrc:/Main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;

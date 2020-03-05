@@ -80,7 +80,7 @@ Window {
         }
     }
 
-    property string wsUrl: "ws://192.168.8.103:8123/api/websocket"
+    property string wsUrl: "ws://192.168.8.111:8123/api/websocket"
     property var authReq: {
         "id": 1,
         "body": "{\"type\": \"auth\",\"access_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1ZWJmNGU1ZTZiMzE0ODE1YmRmY2Q0M2RjNjgxNWYyNyIsImlhdCI6MTU4Mjk1ODQ1OCwiZXhwIjoxODk4MzE4NDU4fQ.DFPiKTes1cahvRc3mWz_noIqseNAf7WuVg3ivv-y8Ak\"}"
